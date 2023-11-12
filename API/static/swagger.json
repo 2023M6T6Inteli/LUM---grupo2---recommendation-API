@@ -1,0 +1,161 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Recomendação de fornecedoras",
+    "description": "API para prever fornecedores",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.11"
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  },
+  "servers": [
+    {
+      "url": "https://petstore3.swagger.io/api/v3"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Recommendation",
+      "description": "Recomendação de fornecedoras através de um modelo de recomendação",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "paths": {
+    "/predictSupplier": {
+      "post": {
+        "tags": [
+          "Recommendation"
+        ],
+        "summary": "Recomenda uma fornecedora",
+        "description": "Recomenda uma fornecedora com base no CIE da escola fornecida",
+        "operationId": "getSchool",
+        "requestBody": {
+          "description": "Recomendar uma fornecedora",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CIE"
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "dados",
+            "description": "Dados para prever o fornecedor",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "CIE": {
+                  "type": "string",
+                  "description": "ID da escola"
+                }
+              },
+              "required": ["feature1", "feature2"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação bem-sucedida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro nos dados de entrada ou processamento",
+            "content": {
+              "application/json": {
+                "example": {
+                  "Error": "Descrição do erro"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "CIE inválido",
+            "content": {
+              "application/json": {
+                "example": {
+                  "Error": "CIE inválido"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "CIE não encontrado",
+            "content": {
+              "application/json": {
+                "example": {
+                  "Error": "CIE não encontrado"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CIE": {
+        "type": "object",
+        "properties": {
+          "CIE": {
+            "type": "string",
+            "description": "CIE da escola para a qual deseja-se fazer a recomendação"
+          }
+        },
+        "required": ["CIE"]
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID da recomendação"
+          },
+          "timestamp": {
+            "type": "timestamp",
+            "description": "Data da recomendação em formato timestamp"
+          },
+          "best_supplier": {
+            "type": "string",
+            "description": "CNPJ da fornecedora recomendada"
+          },
+          "highest_rating": {
+            "type": "number",
+            "description": "Previsão da nota que a escola daria para aquela fornecedora"
+          }
+        }
+      }
+    }
+  }
+}
